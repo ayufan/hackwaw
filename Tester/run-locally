@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [[ $# -ne 1 ]]; then
+    echo "usage: $0 <path-to-app>"
+    exit 1
+fi
+
+abspath() {
+    if [[ -d "$1" ]]
+    then
+        pushd "$1" >/dev/null
+        pwd
+        popd >/dev/null
+    elif [[ -e $1 ]]
+    then
+        pushd "$(dirname "$1")" >/dev/null
+        echo "$(pwd)/$(basename "$1")"
+        popd >/dev/null
+    else
+        echo "$1" does not exist! >&2
+        return 127
+    fi
+}
+
+suppress() {
+    out="$("$@")" || ( echo "$out"; false )
+}
+
+set -eo pipefail
+
+APP_PATH=$(abspath "$1")
+
+docker build -t hackwaw-tester .
+
+docker run -it --rm \
+    --privileged \
+    -v "/var/run/docker.sock:/var/run/docker.sock" \
+    -v "$APP_PATH:$APP_PATH:ro" \
+    -e "CI_PROJECT_DIR=$APP_PATH" \
+    -e "CI_BUILD_ID=$(date +%s)" \
+    -e "APP_DASHBOARD_URL" \
+    -e "APP_CONTAINER_LOGS" \
+    -e "APP_TESTER_LOGS" \
+    -e "CI_SERVER_URL" \
+    -e "CI_BUILD_TOKEN" \
+    -e "CI_BUILD_REPO" \
+    hackwaw-tester

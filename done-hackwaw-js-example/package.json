@@ -1,0 +1,30 @@
+{
+  "name": "hackwaw-js-example",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^2.0.0-rc.1",
+    "beeper": "^1.1.0",
+    "colors": "^1.1.2",
+    "express": "^4.12.3",
+    "fs": "0.0.2",
+    "lodash": "^4.6.1",
+    "nedb": "^1.8.0",
+    "path": "^0.12.7",
+    "request": "^2.69.0",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node app.js | node tasks/run.js",
+    "test": "swagger project test"
+  }
+}

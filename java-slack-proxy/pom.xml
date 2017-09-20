@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pl.hackwaw</groupId>
+    <artifactId>disrupt-slack-proxy</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!--Required maven version: 3.3.9-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!--Dependencies-->
+        <spring-boot.version>1.3.0.RELEASE</spring-boot.version>
+        <springfox-swagger2.version>2.3.0</springfox-swagger2.version>
+        <spock-spring.version>1.0-groovy-2.4</spock-spring.version>
+
+        <!--Groovy-->
+        <groovy-all.version>2.4.4</groovy-all.version>
+        <groovy-eclipse-compiler.version>2.9.2-01</groovy-eclipse-compiler.version>
+        <groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
+
+        <!--Plugins-->
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+
+        <!--Dependencies-->
+        <spock-spring.version>1.0-groovy-2.4</spock-spring.version>
+        <lombok.version>1.16.6</lombok.version>
+        <guava.version>19.0</guava.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+
+        <twitter4j-core.version>4.0.4</twitter4j-core.version>
+        <rxjava-core.version>0.20.7</rxjava-core.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!--Spring-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--Springfox-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+
+        <!--Utils-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!--Obligatory to build uber package to start app via "java -jar name-of-the-jar.jar"-->
+            <!--Adds "mvn spring-boot:run"-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--Compiles Groovy Clases. Groovy should be used only in tests -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <compilerId>groovy-eclipse-compiler</compilerId>
+                    <verbose>false</verbose>
+                    <fork>true</fork>
+                    <compilerArguments>
+                        <javaAgentClass>lombok.launch.Agent</javaAgentClass>
+                    </compilerArguments>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-compiler</artifactId>
+                        <version>${groovy-eclipse-compiler.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-batch</artifactId>
+                        <version>${groovy-eclipse-batch.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

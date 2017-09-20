@@ -1,0 +1,15 @@
+{
+  "name": "radek/hackwaw-php-example",
+  "minimum-stability": "dev",
+  "require": {
+    "react/http": "0.4.*",
+    "react/http-client": "0.4.*",
+    "nikic/fast-route": "0.8.*"
+  },
+  "authors": [
+    {
+      "name": "Radek Baczyński",
+      "email": "radek.baczynski@docplanner.com"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+	"ImportPath": "gitlab.com/hackwaw-disrupt/golang-proxy-server",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/cenkalti/backoff",
+			"Comment": "v1.0.0",
+			"Rev": "32cd0c5b3aef12c76ed64aaf678f6c79736be7dc"
+		},
+		{
+			"ImportPath": "github.com/coreos/pkg/flagutil",
+			"Rev": "1914e367e85eaf0c25d495b48e060dfe6190f8d0"
+		},
+		{
+			"ImportPath": "github.com/dghubble/go-twitter/twitter",
+			"Rev": "e61947497a0468fcdc6809a8d75889c9c369052a"
+		},
+		{
+			"ImportPath": "github.com/dghubble/oauth1",
+			"Comment": "v0.2.0-4-gb976e49",
+			"Rev": "b976e493be28db57be393db34b4fc1a569f0459b"
+		},
+		{
+			"ImportPath": "github.com/dghubble/sling",
+			"Comment": "v1.0-12-gdae3211",
+			"Rev": "dae32115349f89dcfb306b4e1e4b42813c189b6a"
+		},
+		{
+			"ImportPath": "github.com/google/go-querystring/query",
+			"Rev": "d8840cbb2baa915f4836edda4750050a2c0b7aea"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "b4e17d61b15679caf2335da776c614169a1b4643"
+		}
+	]
+}

@@ -1,0 +1,85 @@
+#!/bin/bash
+
+set -eo pipefail
+
+if [ -d /app ]; then
+    PROJECT_NAME=local_app
+elif [ -n "$CI_PROJECT_DIR" ]; then
+    ln -s "$CI_PROJECT_DIR" "/app"
+    PROJECT_NAME="$(basename "$(dirname "$CI_PROJECT_DIR")")/$(basename "$CI_PROJECT_DIR")"
+else
+    echo "Mount your application to /app or define CI_PROJECT_DIR"
+    exit 1
+fi
+
+export APP_IMAGE="hackwaw_app_${RANDOM}"
+export APP_SUITE_ID="${CI_BUILD_ID:-0}"
+export APP_SUITE_REPOSITORY="$PROJECT_NAME"
+export APP_SERVER_LISTEN="$(hostname -i):0"
+export APP_TESTER_LOGS="${APP_TESTER_LOGS:-1}"
+export APP_CONTAINER_LOGS="${APP_CONTAINER_LOGS:-1}"
+export APP_BUILD_LOGS="${APP_BUILD_LOGS:-1}"
+
+remove_app_image() {
+    echo Removing image...
+    docker rmi -f --no-prune "$APP_IMAGE"
+}
+
+trap remove_app_image EXIT
+
+suppress() {
+    out="$("$@")" || ( echo "$out"; false )
+}
+
+mkdir logs/
+
+if [ ! -e /var/run/docker.sock ]; then
+    echo Starting docker...
+    dind docker daemon \
+        --host=unix:///var/run/docker.sock \
+        --host=tcp://0.0.0.0:2375 \
+        --storage-driver=overlay \
+        "$@" &>logs/docker.log &
+
+    (( timeout = 60 + SECONDS ))
+    until docker info >/dev/null 2>&1
+    do
+        if (( SECONDS >= timeout )); then
+            echo 'Timed out trying to connect to internal docker host.' >&2
+            break
+        fi
+        sleep 1
+    done
+fi
+
+suppress() {
+    out="$("$@")" || ( echo "$out"; false )
+}
+
+CI_BUILD_TOKEN=$(echo "$CI_BUILD_REPO" | sed -n 's/^.*\/\/gitlab-ci-token:\(.*\)@.*\/.*$/\1/p')
+
+echo Building $PROJECT_NAME...
+if [[ "${APP_BUILD_LOGS}" == "1" ]]; then
+    docker build -t "$APP_IMAGE" "/app"
+else
+    docker build -t "$APP_IMAGE" "/app" &> logs/docker-build.log
+fi
+echo
+echo
+
+echo Testing application...
+RESULT=0
+./tester \
+    -ginkgo.seed=0 \
+    -ginkgo.v || RESULT=$?
+echo
+echo
+
+if [ -n "$CI_BUILD_TOKEN" ]; then
+    echo Uploading results...
+    gitlab-runner artifacts-uploader --path logs/ --name "logs_${CI_BUILD_REF_NAME}" || true
+    echo
+    echo
+fi
+
+exit $RESULT

@@ -1,0 +1,44 @@
+# To open, use http://editor.swagger.io/#/
+swagger: '2.0'
+info:
+  title: API Proxy Slack
+  description: Nakładka na API Slacka
+  version: "1.0.0"
+schemes:
+  - http
+host: "localhost:8081"
+produces:
+  - application/json
+paths:
+  /push:
+    post:
+      summary: Wysyła komunikat do Slacka
+      description: |
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              team:
+                type: string
+                description: Nazwa zespołu
+              tweetId:
+                type: integer
+                format: int64
+                description: Identyfikator twita
+              icon_url:
+                type: string
+                description: URL do ikonki
+              text:
+                type: string
+                description: Treść twita
+              date:
+                type: string
+                description: Data twita
+      responses:
+        200:
+          description: Wiadomość wysłana

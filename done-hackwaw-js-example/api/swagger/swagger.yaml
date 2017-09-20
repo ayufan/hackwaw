@@ -1,0 +1,104 @@
+# To open, use http://editor.swagger.io/#/
+swagger: '2.0'
+info:
+  title: API Proxy twittera
+  description: API Aplikacji
+  version: "1.0.0"
+schemes:
+  - http
+host: "localhost:10010"
+produces:
+  - application/json
+paths:
+  /latest:
+    x-swagger-router-controller: latest
+    get:
+      operationId: latest
+      summary: Pobiera listę twitów. Używa stronicowania
+      description: |
+        Pobiera listę twitów, jakie aplikacja przechowywuje
+      parameters:
+        - name: page
+          in: query
+          description: |-
+            "Numer strony, począwszy od 0. Domyślny zero."
+            "Jeżeli za długi, zwraca pustą listę."
+          required: false
+          type: integer
+      responses:
+        200:
+          description: Tablica twitów
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tweet'
+  /health:
+    x-swagger-router-controller: health
+    get:
+      operationId: health
+      summary: Pobiera status aplikacji
+      description: |
+        Zwraca status serwera
+      responses:
+        200:
+          description: Odpowieź informująca o statusie serwera
+          schema:
+            $ref: '#/definitions/Health'
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  Tweet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Wewnętrzny identyfikator twita
+      twitterId:
+        type: integer
+        format: int64
+        description: Zewnętrzny identyfikator twita
+      link:
+        type: string
+        description: Link do twita
+      body:
+        type: string
+        description: Zawartość twita
+      date:
+        type: string
+        format: dateTime
+        description: Data twita z czasem (format ISO).
+  Health:
+    type: object
+    required:
+      - app
+      - database
+    properties:
+      app:
+        type: string
+        enum:
+            - OPERATIONAL
+            - SLOW
+            - ERROR
+      database:
+        type: string
+        enum:
+            - OPERATIONAL
+            - DOWN
+            - SLOW
+            - ERROR
+            - UNNECESSARY
+      twitter:
+        type: string
+        enum:
+            - OPERATIONAL
+            - DOWN
+            - SLOW
+            - ERROR
+      slack:
+        type: string
+        enum:
+            - OPERATIONAL
+            - DOWN
+            - SLOW
+            - ERROR

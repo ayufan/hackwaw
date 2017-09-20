@@ -1,0 +1,8 @@
+{
+
+    "maxerr"        : 50,
+    "strict"        : true,
+    "esversion"     : 6,
+    "node"          : true,
+    "predef"        : ["$log", "describe", "it", "config", "db"]
+}

@@ -1,0 +1,5 @@
+flask
+requests
+tinydb
+Click
+git+https://github.com/tonyg/python-rfc3339#egg=rfc3339

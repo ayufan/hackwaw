@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -xeo pipefail
+
+go get -v -t github.com/goware/prefixer
+go get -v -t github.com/onsi/ginkgo
+go get -v -t github.com/onsi/gomega
+go get -v -t github.com/goware/prefixer
+go get -v -t github.com/coreos/pkg/flagutil

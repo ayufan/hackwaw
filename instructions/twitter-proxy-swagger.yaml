@@ -1,0 +1,51 @@
+# To open, use http://editor.swagger.io/#/
+swagger: '2.0'
+info:
+  title: API Proxy twittera
+  description: Nakładka na API Twittera
+  version: "1.0.0"
+schemes:
+  - http
+host: "localhost:8080"
+produces:
+  - application/json
+paths:
+  /tweets:
+    get:
+      summary: Pobiera listę twitów z danego okresu czasowego
+      description: |
+      parameters:
+        - name: from
+          in: query
+          description: Data z czasem (format ISO) od kiedy zwracać twity.
+          required: true
+          type: string
+          format: datetime
+        - name: to
+          in: query
+          description: Data z czasem (format ISO) do kiedy zwracać twity.
+          required: true
+          type: string
+          format: datetime
+      responses:
+        200:
+          description: Tablica twitów
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tweet'
+definitions:
+  Tweet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Identyfikator twita
+      body:
+        type: string
+        description: Treść twita
+      date:
+        type: string
+        format: date
+        description: Data twita z czasem (format ISO). Strefa UTC.

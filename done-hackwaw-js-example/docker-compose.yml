@@ -1,0 +1,7 @@
+node:
+  build: .
+  ports:
+    - 8080:8080
+  environment:
+    TWITTER_URL: https://hackwaw-twitter-proxy.herokuapp.com
+    SLACK_URL: https://hackwaw-slack-proxy.herokuapp.com
